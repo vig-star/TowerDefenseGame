@@ -99,7 +99,7 @@ Run all **46 GUI tests**:
 
 Allow roughly **8–12 minutes** for the full suite: the original combat tests contain over six minutes of fixed waits. Tests control the mouse and keyboard, so leave the game window undisturbed. Timing and shared state can affect results. Reports are written to `target/surefire-reports/`.
 
-GitHub Actions builds the project and runs the selected interface smoke tests under a virtual Linux display. Full combat coverage is a separate check; the workflow's manual run also offers the full suite.
+GitHub Actions builds the project, runs the gameplay smoke helper, and executes the selected interface tests under a virtual Linux display. Full combat coverage is a separate check; the workflow's manual run also offers the full suite.
 
 To reproduce the README screenshot on macOS or Linux, run `./scripts/capture-gameplay.sh`. This separate smoke helper opens the game, invokes its UI handlers, verifies setup, purchases, placement, and combat damage, then saves `docs/images/gameplay.png` and exits. It needs a display but does not control the mouse or capture the desktop.
 
