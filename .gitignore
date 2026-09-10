@@ -1,6 +1,24 @@
 # Compiled class file
 *.class
 
+# Maven build output
+/target/
+
+# Local IDE configuration
+/.idea/
+*.iml
+/.classpath
+/.project
+/.settings/
+/out/
+/.vscode/
+
+# macOS metadata
+.DS_Store
+
+# TestFX diagnostic screenshots
+/testfx-screenshots/
+
 # Log file
 *.log
 

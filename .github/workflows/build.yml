@@ -1,0 +1,54 @@
+name: Build and UI smoke tests
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      full_gui_suite:
+        description: Run all original GUI tests (at least 8 minutes)
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '11'
+          cache: maven
+      - name: Compile application and all test sources
+        run: ./mvnw --batch-mode --no-transfer-progress clean package
+      - name: Install virtual display for JavaFX
+        run: sudo apt-get update && sudo apt-get install -y xvfb libgtk-3-0
+      - name: Run UI smoke tests
+        if: ${{ !inputs.full_gui_suite }}
+        run: >-
+          xvfb-run --auto-servernum
+          ./mvnw --batch-mode --no-transfer-progress -Pgui-tests
+          -Dprism.order=sw
+          -Dtest=WelcomeScreenTest,InitialConfigScreenTest,InitialGameScreenTest,TowerMenuTest
+          test
+      - name: Run complete original GUI suite
+        if: ${{ inputs.full_gui_suite }}
+        run: >-
+          xvfb-run --auto-servernum
+          ./mvnw --batch-mode --no-transfer-progress -Pgui-tests
+          -Dprism.order=sw test
+      - name: Upload GUI test reports
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: gui-test-reports
+          path: target/surefire-reports/
+          if-no-files-found: ignore
+          retention-days: 7
