@@ -1,0 +1,4 @@
+# Keep executable scripts portable and the Windows wrapper in its native format.
+/mvnw text eol=lf
+/mvnw.cmd text eol=crlf
+*.sh text eol=lf
